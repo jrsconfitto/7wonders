@@ -9,7 +9,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 var models
-  , games = [];
+  , games = []
+  , players = []
+  , gameDateFormat = d3.time.format('%Y-%m-%d');
 
 function loaded(data, tabletop) {
   // i'm getting TableTop models because i want a whole bunch of sheets
@@ -19,17 +21,22 @@ function loaded(data, tabletop) {
   for (var key in models) {
     // Discard the template sheet
     if (models.hasOwnProperty(key) && key !== 'Template') {
+
+      var date = gameDateFormat.parse(key.slice(0, 10));
+      var gameNumberString = (key.length > 10) ? key.slice(10): 1;
+
       var game = {
-        "Date": key,
+        "Date": date,
+        "GameNumber": gameNumberString,
         "Players": models[key].elements
       };
 
+      players = players.concat(models[key].elements);
       games.push(game);
     }
-  };
+  }
 
-  // Filter out the Template model
-  // games = data.filter(function(sheet) {
-  //   return sheet.name !== 'Template';
-  // });
+  // Now we get to the fun part?
+  d3.select('#totalGames').text(games.length);
+  d3.select('#playerTotals').text(players.length);
 }
