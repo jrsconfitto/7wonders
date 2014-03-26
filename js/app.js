@@ -30,13 +30,20 @@ function loaded(data, tabletop) {
         "GameNumber": gameNumberString,
         "Players": models[key].elements
       };
-
       players = players.concat(models[key].elements);
       games.push(game);
     }
   }
 
+  players = d3.map(players);
+
+  // James/Jamie are the same person! me!
+  var uniquePlayers = d3.set(players.values().map(function(player) {
+    return player.name
+  })).values()
+
   // Now we get to the fun part?
   d3.select('#totalGames').text(games.length);
-  d3.select('#playerTotals').text(players.length);
+  d3.select('#playerTotals').text(uniquePlayers.length);
 }
+
