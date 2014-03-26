@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
 var models
   , games = []
   , players = []
+  , playersNest
+  , locationsNest
   , gameDateFormat = d3.time.format('%Y-%m-%d');
 
 function loaded(data, tabletop) {
@@ -35,15 +37,16 @@ function loaded(data, tabletop) {
     }
   }
 
-  players = d3.map(players);
+  playersNest = d3.nest()
+    .key(function(player) { return player.name })
+    .sortKeys(d3.ascending)
+    .entries(players);
 
-  var uniquePlayers = d3.set(players.values().map(function(player) {
-    return player.name
-  })).values()
-
-  var uniqueLocations = d3.set(players.values().map(function(player) {
-    return player.location
-  })).values()
+  locationsNest = d3.nest()
+    .key(function(player) {
+      return player.location
+    })
+    .entries(players);
 
   // Now we get to the fun part?
   d3.select('#totalGames')
@@ -51,11 +54,18 @@ function loaded(data, tabletop) {
     .attr('class', 'bold');
 
   d3.select('#totalPlayers')
-    .text(uniquePlayers.length)
+    .text(playersNest.length)
     .attr('class', 'bold');
 
   d3.select('#totalLocations')
-    .text(uniqueLocations.length)
+    .text(locationsNest.length)
     .attr('class', 'bold');
+
+  d3.select('#playerList').selectAll('li')
+      .data(playersNest)
+    .enter().append('li')
+      .text(function(d) {
+        return d.key
+      })
 }
 
