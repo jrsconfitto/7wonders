@@ -2,6 +2,11 @@
 <html>
 <head>
     <title>7 Wonders statification</title>
+    <style>
+        .bold {
+            font-weight: bold;
+        }
+    </style>
     <script type="text/javascript" src="js/tabletop.js"></script>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 </head>
@@ -10,14 +15,12 @@
         <h1>7 Wonders statistics</h1>
     </section>
     <section id="stats">
-        <h2>Games</h2>
-        <p>
-            We've got <span id="totalGames"></span> games tracked in this system
-        </p>
+        <p class="about">This tracks the games that i've played of 7 Wonders</p>
 
-        <h2>Players</h2>
         <p>
-            <span id="playerTotals"></span> people have played with us :)
+            We've played <span id="totalGames"></span> games tracked in this system played
+            with <span id="totalPlayers"></span> players
+            in <span id="totalLocations"></span> locations.
         </p>
     </section>
     <script src="js/app.js"></script>

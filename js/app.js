@@ -37,13 +37,25 @@ function loaded(data, tabletop) {
 
   players = d3.map(players);
 
-  // James/Jamie are the same person! me!
   var uniquePlayers = d3.set(players.values().map(function(player) {
     return player.name
   })).values()
 
+  var uniqueLocations = d3.set(players.values().map(function(player) {
+    return player.location
+  })).values()
+
   // Now we get to the fun part?
-  d3.select('#totalGames').text(games.length);
-  d3.select('#playerTotals').text(uniquePlayers.length);
+  d3.select('#totalGames')
+    .text(games.length)
+    .attr('class', 'bold');
+
+  d3.select('#totalPlayers')
+    .text(uniquePlayers.length)
+    .attr('class', 'bold');
+
+  d3.select('#totalLocations')
+    .text(uniqueLocations.length)
+    .attr('class', 'bold');
 }
 
