@@ -13,10 +13,10 @@ var models
   , players = []
   , playersNest
   , locationsNest
-  , gameDateFormat = d3.time.format('%Y-%m-%d');
+  , gameDateFormat = d3.time.format('%Y-%m-%d')
 
 function loaded(data, tabletop) {
-  // i'm getting TableTop models because i want a whole bunch of sheets
+  // i'm getting TableTop models because i want to see all the sheets
   models = data;
 
   // Enumerate through the sheets
@@ -61,11 +61,23 @@ function loaded(data, tabletop) {
     .text(locationsNest.length)
     .attr('class', 'bold');
 
-  d3.select('#playerList').selectAll('li')
-      .data(playersNest)
-    .enter().append('li')
-      .html(function(d) {
-        return d.key + ' &dash; ' + d.values.length + ' games';
+  var playerPoints =
+    d3.select('#playerList').selectAll('li')
+        .data(playersNest)
+      .enter().append('li')
+
+  playerPoints.insert('a')
+      // When i'm ready for personalized user pages
+      /*.attr('href', function(player) {
+        return '#player/' + player.key
+      })*/
+      .text(function(player) {
+        return player.key
+      })
+
+  playerPoints.append('span')
+      .html(function(player) {
+        return '&nbsp;&dash; ' + player.values.length
       })
 }
 
