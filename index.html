@@ -8,30 +8,43 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/gridism.css">
         <style>
             .bold {
                 font-weight: bold;
             }
         </style>
     </head>
-    <body>
+    <body class="wrap wider">
         <section id="header">
-            <h1>7 Wonders statistics</h1>
+            <div class="grid">
+                <div class="unit whole">
+                    <h1>7 Wonders statistics</h1>
+                </div>
+            </div>
         </section>
         <section id="totals">
-            <h2>Totals</h2>
-            <p class="about">This tracks the games that i've played of <a href="http://www.rprod.com/index.php?page=description-22">7 Wonders</a></p>
+            <div class="grid">
+                <div class="unit whole">
+                    <h2>Totals</h2>
+                    <p class="about">This tracks the games that i've played of <a href="http://www.rprod.com/index.php?page=description-22">7 Wonders</a></p>
 
-            <p>
-                We've played <span id="totalGames"></span> games tracked in this system played
-                with <span id="totalPlayers"></span> players
-                in <span id="totalLocations"></span> locations.
-            </p>
+                    <p>
+                        We've played <span id="totalGames"></span> games tracked in this system played
+                        with <span id="totalPlayers"></span> players
+                        in <span id="totalLocations"></span> locations.
+                    </p>
+                </div>
+            </div>
         </section>
         <section id="players">
-            <h2>Players</h2>
-            <ul id="playerList">
-            </ul>
+            <div class="grid">
+                <div class="unit whole">
+                    <h2>Players</h2>
+                    <ul id="playerList">
+                    </ul>
+                </div>
+            </div>
         </section>
 
         <script type="text/javascript" src="js/tabletop.js"></script>
