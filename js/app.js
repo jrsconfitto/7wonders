@@ -64,8 +64,8 @@ function loaded(data, tabletop) {
   d3.select('#playerList').selectAll('li')
       .data(playersNest)
     .enter().append('li')
-      .text(function(d) {
-        return d.key
+      .html(function(d) {
+        return d.key + ' &dash; ' + d.values.length + ' games';
       })
 }
 
