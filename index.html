@@ -36,6 +36,20 @@
             #footer {
                 background-color: #F29C06;
             }
+
+            .player {
+                margin: 5px;
+                padding: 5px;
+                color: white;
+            }
+
+            .center-text {
+                text-align: center;
+            }
+
+            .rounded {
+                border-radius: 10px;
+            }
         </style>
     </head>
     <body class="wrap wider">
@@ -65,8 +79,8 @@
             <div class="grid">
                 <div class="unit whole">
                     <h2>Players</h2>
-                    <ul id="playerList">
-                    </ul>
+                </div>
+                <div id="playerList">
                 </div>
             </div>
         </section>
@@ -88,6 +102,7 @@
 
         <script type="text/javascript" src="js/tabletop.js"></script>
         <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+        <script src="js/geopattern.min.js"></script>
         <script src="js/app.js"></script>
         <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

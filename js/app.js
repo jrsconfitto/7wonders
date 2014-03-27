@@ -62,23 +62,30 @@ function loaded(data, tabletop) {
     .attr('class', 'bold');
 
   var playerPoints =
-    d3.select('#playerList').selectAll('li')
+    d3.select('#playerList').selectAll('div')
         .data(playersNest)
-      .enter().append('li')
+      .enter().append('div')
+        .attr('class', 'unit whole player rounded center-text')
+        .style('background-image', function(player) {
+          var pattern = GeoPattern.generate(player.key);
+          return pattern.toDataUrl()
+        })
+      .append('h3')
+        .text(function(player) {
+          return player.key
+        })
+      .append('h4')
+        .text(function(player) {
+          var plural = (player.values.length > 1) ? 's' : ''
+          return player.values.length + ' game' + plural
+        })
 
-  playerPoints.insert('a')
+      /*
+      playerPoints.insert('a')
       // When i'm ready for personalized user pages
-      /*.attr('href', function(player) {
+      .attr('href', function(player) {
         return '#player/' + player.key
-      })*/
-      .text(function(player) {
-        return player.key
       })
-
-  playerPoints.append('span')
-      .html(function(player) {
-        var plural = (player.values.length > 1) ? 's' : ''
-        return '&nbsp;&dash; ' + player.values.length + ' game' + plural
-      })
+      */
 }
 
