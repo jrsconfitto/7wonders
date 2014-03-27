@@ -77,7 +77,8 @@ function loaded(data, tabletop) {
 
   playerPoints.append('span')
       .html(function(player) {
-        return '&nbsp;&dash; ' + player.values.length
+        var plural = (player.values.length > 1) ? 's' : ''
+        return '&nbsp;&dash; ' + player.values.length + ' game' + plural
       })
 }
 
