@@ -89,6 +89,13 @@ function loaded(data, tabletop) {
           var plural = (player.values.length > 1) ? 's' : ''
           return player.values.length + ' game' + plural
         })
+      .append('h4')
+        .text(function(player) {
+          var totalPoints = player.values.reduce(function(prev, curr) {
+            return prev + (+curr.total)
+          }, 0);
+          return totalPoints + ' points'
+        })
 
       /*
       playerPoints.insert('a')
