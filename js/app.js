@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 var models
   , games = []
-  , players = []
-  , playersNest
-  , locationsNest
+  , people = []
+  , players
+  , locations
   , gameDateFormat = d3.time.format('%Y-%m-%d')
 
 function loaded(data, tabletop) {
@@ -36,21 +36,21 @@ function loaded(data, tabletop) {
         }, 0)
       };
 
-      players = players.concat(models[key].elements);
+      people = people.concat(models[key].elements);
       games.push(game);
     }
   }
 
-  playersNest = d3.nest()
-    .key(function(player) { return player.name })
-    .sortKeys(d3.ascending)
-    .entries(players);
-
-  locationsNest = d3.nest()
+  locations = d3.nest()
     .key(function(player) {
       return player.location
     })
-    .entries(players);
+    .entries(people);
+
+  players = d3.nest()
+    .key(function(player) { return player.name })
+    .sortKeys(d3.ascending)
+    .entries(people);
 
   // Now we get to the fun part?
   d3.select('#totalPoints')
@@ -64,16 +64,16 @@ function loaded(data, tabletop) {
     .attr('class', 'bold');
 
   d3.select('#totalPlayers')
-    .text(playersNest.length)
+    .text(players.length)
     .attr('class', 'bold');
 
   d3.select('#totalLocations')
-    .text(locationsNest.length)
+    .text(locations.length)
     .attr('class', 'bold');
 
   var playerPoints =
     d3.select('#playerList').selectAll('div')
-        .data(playersNest)
+        .data(players)
       .enter().append('div')
         .attr('class', 'unit whole player rounded center-text')
         .style('background-image', function(player) {
