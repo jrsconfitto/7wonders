@@ -30,8 +30,12 @@ function loaded(data, tabletop) {
       var game = {
         "Date": date,
         "GameNumber": gameNumberString,
-        "Players": models[key].elements
+        "Players": models[key].elements,
+        "TotalPoints": models[key].elements.reduce(function(prev, curr) {
+          return prev + +curr.total; 
+        }, 0)
       };
+
       players = players.concat(models[key].elements);
       games.push(game);
     }
@@ -49,6 +53,12 @@ function loaded(data, tabletop) {
     .entries(players);
 
   // Now we get to the fun part?
+  d3.select('#totalPoints')
+    .text(games.reduce(function(prev, curr) {
+      return prev + curr.TotalPoints;
+    }, 0))
+    .attr('class', 'bold');
+
   d3.select('#totalGames')
     .text(games.length)
     .attr('class', 'bold');
