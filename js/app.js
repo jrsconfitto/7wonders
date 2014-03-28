@@ -71,38 +71,36 @@ function loaded(data, tabletop) {
     .text(locations.length)
     .attr('class', 'bold');
 
-  var playerPoints =
-    d3.select('#playerList').selectAll('div')
-        .data(players)
-      .enter().append('div')
-        .attr('class', 'unit whole player rounded center-text')
-        .style('background-image', function(player) {
-          var pattern = GeoPattern.generate(player.key);
-          return pattern.toDataUrl()
-        })
-      .append('h3')
-        .text(function(player) {
-          return player.key
-        })
-      .append('h4')
-        .text(function(player) {
-          var plural = (player.values.length > 1) ? 's' : ''
-          return player.values.length + ' game' + plural
-        })
-      .append('h4')
-        .text(function(player) {
-          var totalPoints = player.values.reduce(function(prev, curr) {
-            return prev + (+curr.total)
-          }, 0);
-          return totalPoints + ' points'
-        })
-
-      /*
-      playerPoints.insert('a')
-      // When i'm ready for personalized user pages
-      .attr('href', function(player) {
-        return '#player/' + player.key
+  d3.select('#playerList').selectAll('div')
+      .data(players)
+    .enter().append('div')
+      .attr('class', 'unit whole player rounded center-text')
+      .style('background-image', function(player) {
+        var pattern = GeoPattern.generate(player.key);
+        return pattern.toDataUrl()
       })
-      */
+    .append('h3')
+      .text(function(player) {
+        return player.key
+      })
+    .append('h4')
+      .text(function(player) {
+        var plural = (player.values.length > 1) ? 's' : ''
+        return player.values.length + ' game' + plural
+      })
+    .append('h4')
+      .text(function(player) {
+        var totalPoints = player.values.reduce(function(prev, curr) {
+          return prev + (+curr.total)
+        }, 0);
+        return totalPoints + ' points'
+      })
+
+    /*
+    // When i'm ready for personalized user pages
+    .attr('href', function(player) {
+      return '#player/' + player.key
+    })
+    */
 }
 
