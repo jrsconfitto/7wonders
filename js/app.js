@@ -90,7 +90,7 @@ function loaded(data, tabletop) {
       .attr('class', 'grid')
 
   // Each player gets their own little block with their own geopattern
-  playerRow.selectAll('div')
+  var playerBlock = playerRow.selectAll('div')
       .data(function(d) { return d; })
     .enter().append('div')
       .attr('class', 'unit one-third')
@@ -100,23 +100,33 @@ function loaded(data, tabletop) {
         var pattern = GeoPattern.generate(player.key);
         return pattern.toDataUrl()
       })
-    .append('h3')
+
+    playerBlock.append('h3').append('a')
+      .style('color', 'white')
+      .attr('class', 'player')
+      .attr('href', function(player) {
+        return '#' + player.key
+      })
       .text(function(player) {
         return player.key
       })
-    .append('h4')
+      .on('click', showUser)
+
+  playerBlock.append('h4')
       .text(function(player) {
         var plural = (player.values.length > 1) ? 's' : ''
         return player.values.length + ' game' + plural
       })
-    .append('h4')
+
+  playerBlock.append('p')
       .text(function(player) {
         var totalPoints = player.values.reduce(function(prev, curr) {
           return prev + (+curr.total)
         }, 0);
         return totalPoints + ' points'
       })
-    .append('h4')
+
+  playerBlock.append('p')
       .text(function(player) {
         var totalPoints = player.values.reduce(function(prev, curr) {
           return prev + (+curr.total)
@@ -134,3 +144,8 @@ function loaded(data, tabletop) {
     */
 }
 
+function showUser(data) {
+  console.log(data);
+
+  var selectedPlayer = d3.select('#selectedPlayer');
+}
