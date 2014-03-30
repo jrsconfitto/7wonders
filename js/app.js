@@ -52,6 +52,14 @@ function loaded(data, tabletop) {
     .sortKeys(d3.ascending)
     .entries(people);
 
+  // Slice up players into pairs for smaller blocks
+  var slicedPlayers = [],
+      playersPerGroup = 3;
+
+  for (var i = 0; i < players.length + playersPerGroup; i = i + playersPerGroup) {
+    slicedPlayers.push(players.slice(i, i + playersPerGroup));
+  }
+
   // Now we get to the fun part?
   d3.select('#totalPoints')
     .text(games.reduce(function(prev, curr) {
@@ -75,10 +83,19 @@ function loaded(data, tabletop) {
     .append('div')
     .attr('id', 'playerList')
 
-  playerList.selectAll('div')
-      .data(players)
+  // Create a row for every two players
+  var playerRow = playerList.selectAll('div')
+      .data(slicedPlayers)
     .enter().append('div')
-      .attr('class', 'unit whole player rounded center-text')
+      .attr('class', 'grid')
+
+  // Each player gets their own little block with their own geopattern
+  playerRow.selectAll('div')
+      .data(function(d) { return d; })
+    .enter().append('div')
+      .attr('class', 'unit one-third')
+    .append('div')
+      .attr('class', 'player rounded center-text')
       .style('background-image', function(player) {
         var pattern = GeoPattern.generate(player.key);
         return pattern.toDataUrl()
