@@ -71,7 +71,11 @@ function loaded(data, tabletop) {
     .text(locations.length)
     .attr('class', 'bold');
 
-  d3.select('#playerList').selectAll('div')
+  var playerList = d3.select('#players')
+    .append('div')
+    .attr('id', 'playerList')
+
+  playerList.selectAll('div')
       .data(players)
     .enter().append('div')
       .attr('class', 'unit whole player rounded center-text')
