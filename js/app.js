@@ -28,10 +28,10 @@ function loaded(data, tabletop) {
       var gameNumberString = (key.length > 10) ? key.slice(10): 1;
 
       var game = {
-        "Date": date,
-        "GameNumber": gameNumberString,
-        "Players": models[key].elements,
-        "TotalPoints": models[key].elements.reduce(function(prev, curr) {
+        "date": date,
+        "gameNumber": gameNumberString,
+        "players": models[key].elements,
+        "totalPoints": models[key].elements.reduce(function(prev, curr) {
           return prev + +curr.total; 
         }, 0)
       };
@@ -63,7 +63,7 @@ function loaded(data, tabletop) {
   // Now we get to the fun part?
   d3.select('#totalPoints')
     .text(games.reduce(function(prev, curr) {
-      return prev + curr.TotalPoints;
+      return prev + curr.totalPoints;
     }, 0))
     .attr('class', 'bold');
 
