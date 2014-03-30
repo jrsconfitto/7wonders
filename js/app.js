@@ -135,13 +135,6 @@ function loaded(data, tabletop) {
         var avgPointsPerGame = totalPoints / player.values.length
         return numeral(avgPointsPerGame).format('0[.]00') + ' points per game'
       })
-
-    /*
-    // When i'm ready for personalized user pages
-    .attr('href', function(player) {
-      return '#player/' + player.key
-    })
-    */
 }
 
 function showUser(data) {
