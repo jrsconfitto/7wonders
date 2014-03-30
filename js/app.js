@@ -95,6 +95,15 @@ function loaded(data, tabletop) {
         }, 0);
         return totalPoints + ' points'
       })
+    .append('h4')
+      .text(function(player) {
+        var totalPoints = player.values.reduce(function(prev, curr) {
+          return prev + (+curr.total)
+        }, 0);
+
+        var avgPointsPerGame = totalPoints / player.values.length
+        return numeral(avgPointsPerGame).format('0[.]00') + ' points per game'
+      })
 
     /*
     // When i'm ready for personalized user pages
