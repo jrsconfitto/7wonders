@@ -115,8 +115,9 @@ function loaded(data, tabletop) {
     .text(winningWondersString)
     .attr('class', 'bold');
 
+  var winningWonderAvg = numeral((maxGamesWon / games.length) * 100).format('0[.]0')
   d3.select('#winningWonderPercentage')
-    .text(((maxGamesWon / games.length) * 100) + '%')
+    .text(winningWonderAvg + '%')
     .attr('class', 'bold');
 
   var playerList = d3.select('#players')
