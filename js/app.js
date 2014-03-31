@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 var models
   , games = []
   , people = []
+  , winners = []
   , players
   , locations
   , gameDateFormat = d3.time.format('%Y-%m-%d')
@@ -36,6 +37,13 @@ function loaded(data, tabletop) {
         }, 0)
       };
 
+      var highScore = d3.max(game.players, function(player) {
+        return player.total
+      })
+
+      winners.push({ 'date': game.date,
+                     'winner': game.players.filter(function (player) { return player.total === highScore })[0],
+                     'score': highScore });
       people = people.concat(models[key].elements);
       games.push(game);
     }
@@ -82,6 +90,33 @@ function loaded(data, tabletop) {
 
   d3.select('#totalLocations')
     .text(locations.length)
+    .attr('class', 'bold');
+
+  // Winning wonders
+  winnings = d3.nest()
+    .key(function(win) {
+      return win.winner.wonder
+    })
+    .entries(winners);
+
+  // Which wonder wins the most?
+  var maxGamesWon = d3.max(winnings, function(win) { return win.values.length })
+  var winningWondersString = winnings.filter(function(winning) {
+      return winning.values.length == maxGamesWon
+    })
+    .map(function(win) {
+      return win.key
+    })
+    .reduce(function(a, b) {
+      return a + ', ' + b
+    });
+
+  d3.select('#winningWonder')
+    .text(winningWondersString)
+    .attr('class', 'bold');
+
+  d3.select('#winningWonderPercentage')
+    .text(((maxGamesWon / games.length) * 100) + '%')
     .attr('class', 'bold');
 
   var playerList = d3.select('#players')
