@@ -10,9 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 var models
   , games = []
-  , people = []
-  , winners = []
-  , players
   , locations
   , gameDateFormat = d3.time.format('%Y-%m-%d')
 
@@ -28,23 +25,59 @@ function loaded(data, tabletop) {
       var date = gameDateFormat.parse(key.slice(0, 10));
       var gameNumberString = (key.length > 10) ? key.slice(10): 1;
 
-      var game = {
-        "date": date,
-        "gameNumber": gameNumberString,
-        "players": models[key].elements,
-        "totalPoints": models[key].elements.reduce(function(prev, curr) {
-          return prev + +curr.total; 
-        }, 0)
-      };
+      // Put the players into workable objects
+      var players = models[key].elements.map(function(player) {
+        return {
+          name: player.name,
+          wonder: player.wonder,
+          side: player.boardtypeab,
+          scores: {
+            military: +player.military,
+            coindebt: +player.coindebt,
+            wonder:   +player.wonder_2,
+            civic:    +player.civic,
+            trade:    +player.trade,
+            guilds:   +player.guilds,
+            science:  +player.science,
+            leaders:  +player.leadersblackmarket
+          },
+          total: +player.total
+        }
+      })
 
-      var highScore = d3.max(game.players, function(player) {
+      // Calculate the winning score, then filter matching players to account for ties
+      var winningScore = d3.max(players, function(player) {
         return player.total
       })
 
-      winners.push({ 'date': game.date,
-                     'winner': game.players.filter(function (player) { return player.total === highScore })[0],
-                     'score': highScore });
-      people = people.concat(models[key].elements);
+      // Figure out the winners
+      var winners = players.filter(function(player) {
+        return (player.total == winningScore)
+      })
+
+      // Build the final game data object
+      var game = {
+        date: date,
+        gameNumber: gameNumberString,
+        location: models[key].elements[0].location,
+        players: players,
+        totalPoints: players.reduce(function(prev, curr) {
+          return prev + curr.total; 
+        }, 0),
+        cities: players.every(function(player) {
+          return (player.citiesyn === 'TRUE' ||
+                  player.citiesyn === 'Y')
+        }),
+        winners: winners.map(function(winner) {
+          return {
+            name: winner.name,
+            wonder: winner.wonder,
+            score: winner.total
+          }
+        })
+      };
+
+      // Push the final game object intot eh 
       games.push(game);
     }
   }
@@ -52,18 +85,17 @@ function loaded(data, tabletop) {
   // Show the games calendar
   createGameCalendar(games);
 
-  // Boil down locations
-  locations = d3.nest()
-    .key(function(player) {
-      return player.location
-    })
-    .entries(people);
-
   // Show the player blocks
-  players = d3.nest()
+  var allPlayers = games.map(function(game) {
+      return game.players
+    }).reduce(function(a, b) {
+      return a.concat(b)
+    });
+
+  var players = d3.nest()
     .key(function(player) { return player.name })
     .sortKeys(d3.ascending)
-    .entries(people);
+    .entries(allPlayers);
 
   // Slice up players into pairs for smaller blocks
   var slicedPlayers = [],
@@ -88,21 +120,40 @@ function loaded(data, tabletop) {
     .text(players.length)
     .attr('class', 'bold');
 
+  // Locations calculation and display
+  var locations = games.map(function(game) {
+    return game.location
+  }).reduce(function(a, b) {
+    if (a.indexOf(b) === -1) {
+      return a.concat(b)
+    } else {
+      return a
+    }
+  }, [])
+
   d3.select('#totalLocations')
     .text(locations.length)
     .attr('class', 'bold');
 
-  // Winning wonders
-  winnings = d3.nest()
-    .key(function(win) {
-      return win.winner.wonder
+  // Calculate Winningest wonders
+  winners = d3.nest()
+    .key(function(winner) {
+      return winner.wonder
     })
-    .entries(winners);
+    .entries(games.map(function(game) { return game.winners }).reduce(function(a, b) { return a.concat(b) }))
 
-  // Which wonder wins the most?
-  var maxGamesWon = d3.max(winnings, function(win) { return win.values.length })
-  var winningWondersString = winnings.filter(function(winning) {
-      return winning.values.length == maxGamesWon
+  var numberOfWinnersWithoutABoard = winners.filter(function(winner) {
+    return (winner.key === '')
+  }).length;
+
+  winners = winners.filter(function(winner) {
+    return (winner.key !== '');
+  });
+
+  var maxGamesWon = d3.max(winners, function(winner) { return winner.values.length })
+
+  var winningWondersString = winners.filter(function(winner) {
+      return winner.values.length == maxGamesWon
     })
     .map(function(win) {
       return win.key
@@ -115,7 +166,8 @@ function loaded(data, tabletop) {
     .text(winningWondersString)
     .attr('class', 'bold');
 
-  var winningWonderAvg = numeral((maxGamesWon / games.length) * 100).format('0[.]0')
+  var totalGames = (games.length - numberOfWinnersWithoutABoard);
+  var winningWonderAvg = numeral((maxGamesWon / totalGames) * 100).format('0[.]0')
   d3.select('#winningWonderPercentage')
     .text(winningWonderAvg + '%')
     .attr('class', 'bold');
