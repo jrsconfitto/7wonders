@@ -105,20 +105,49 @@ function loaded(data, tabletop) {
     slicedPlayers.push(players.slice(i, i + playersPerGroup));
   }
 
+  // Highest/lowest scores
+  var playerScores = players.map(function(player) {
+    var scores =  player.values.map(function(game) {
+      var sum = 0;
+      for (key in game.scores) {
+        sum += game.scores[key];
+      }
+
+      return sum;
+    }).sort(d3.ascending);
+
+    return {
+      player: player.key,
+      maxScore: d3.max(scores),
+      minScore: d3.min(scores)
+    };
+  });
+
+  var minScoringPlayer = playerScores.sort(function(player1, player2) {
+    return d3.ascending(player1.maxScore, player2.maxScore);
+  })[0];
+
+  var maxScoringPlayer = playerScores.sort(function(player1, player2) {
+    return d3.descending(player1.maxScore, player2.maxScore);
+  })[0];
+
+  // Jonny doesn't count, so i'm gonna cheat for now
+  d3.select('#lowestScoringPlayer').text(maxScoringPlayer.player);
+  d3.select('#lowestScore').text(maxScoringPlayer.minScore);
+  d3.select('#highestScoringPlayer').text(maxScoringPlayer.player);
+  d3.select('#highestScore').text(maxScoringPlayer.maxScore);
+
   // Now we get to the fun part?
   d3.select('#totalPoints')
     .text(games.reduce(function(prev, curr) {
       return prev + curr.totalPoints;
     }, 0))
-    .attr('class', 'bold');
 
   d3.select('#totalGames')
     .text(games.length)
-    .attr('class', 'bold');
 
   d3.select('#totalPlayers')
     .text(players.length)
-    .attr('class', 'bold');
 
   // Locations calculation and display
   var locations = games.map(function(game) {
@@ -133,7 +162,6 @@ function loaded(data, tabletop) {
 
   d3.select('#totalLocations')
     .text(locations.length)
-    .attr('class', 'bold');
 
   // Calculate Winningest wonders
   winners = d3.nest()
@@ -164,13 +192,11 @@ function loaded(data, tabletop) {
 
   d3.select('#winningWonder')
     .text(winningWondersString)
-    .attr('class', 'bold');
 
   var totalGames = (games.length - numberOfWinnersWithoutABoard);
   var winningWonderAvg = numeral((maxGamesWon / totalGames) * 100).format('0[.]0')
   d3.select('#winningWonderPercentage')
     .text(winningWonderAvg + '%')
-    .attr('class', 'bold');
 
   var playerList = d3.select('#players')
     .append('div')
