@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 var models
   , games = []
+  , gamePlayers
   , locations
   , gameDateFormat = d3.time.format('%Y-%m-%d')
 
@@ -96,6 +97,9 @@ function loaded(data, tabletop) {
     .key(function(player) { return player.name })
     .sortKeys(d3.ascending)
     .entries(allPlayers);
+
+  // Save this for access later
+  gamePlayers = players;
 
   // Slice up players into pairs for smaller blocks
   var slicedPlayers = [],
