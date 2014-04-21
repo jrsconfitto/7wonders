@@ -5,6 +5,12 @@ window.addEventListener('hashchange', function() {
     playerName = window.location.hash.substr(1);
     console.info('Showing user ' + playerName + '\'s game data');
 
+    // Show/Hide the right blocks
+    d3.select('#players')
+      .style('display', 'none');
+    d3.select('#selectedPlayer')
+      .style('display', 'block');
+
     var player = gamePlayers.filter(function(player) {
       return player.key == playerName;  
     }).reduce(function(a, b) {
@@ -15,7 +21,9 @@ window.addEventListener('hashchange', function() {
     });
 
     // i think we should replace the entire players section
-    d3.select('#selectedPlayer')
-      .text(playerName);
+    var playerPattern = GeoPattern.generate(playerName);
+    d3.select('#selectedPlayerName')
+      .text(playerName)
+      .style('background-image', playerPattern.toDataUrl())
   }
 });
