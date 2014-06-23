@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
   var gData
-  // https://docs.google.com/spreadsheets/d/1Whyq_IPIWrm7L6qTeu4IuSQ2RWnwtfwWiVwhA-jGEtQ/pubhtml
-  var key = 'https://docs.google.com/spreadsheet/pub?key=0AmhWglGO45rldFBiek84a1FHRmhPQjZaVzRSRGJZbXc&output=html'
+  var key = 'https://docs.google.com/spreadsheets/d/1ttpMIMDw_gYnMRxQP_QFzGcTDcXKjTyYcl8XQ07i8Xk/pubhtml'
   Tabletop.init({
     key: key,
     callback: loaded
@@ -63,7 +62,7 @@ function loaded(data, tabletop) {
         location: models[key].elements[0].location,
         players: players,
         totalPoints: players.reduce(function(prev, curr) {
-          return prev + curr.total; 
+          return prev + curr.total;
         }, 0),
         cities: players.every(function(player) {
           return (player.citiesyn === 'TRUE' ||
@@ -78,7 +77,7 @@ function loaded(data, tabletop) {
         })
       };
 
-      // Push the final game object intot eh 
+      // Push the final game object intot eh
       games.push(game);
     }
   }
